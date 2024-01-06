@@ -4,9 +4,9 @@ export TOKENIZERS_PARALLELISM=false
 
 RESULT_DIR='results/korean_origin_bench'
 TASKS='korquad'
-GPU_NO=7
+GPU_NO=1
 
-MODELS=("5.8b")
+MODELS=("3.8b")
 
 for CURRENT_MODEL in "${MODELS[@]}"
 do
@@ -16,7 +16,7 @@ do
 
   MODEL="EleutherAI/polyglot-ko-$CURRENT_MODEL"
 
-  for num_fewshot in 5
+  for num_fewshot in 0
   do
     python main.py \
     --model gpt2 \
@@ -24,10 +24,8 @@ do
     --tasks $TASKS \
     --num_fewshot $num_fewshot \
     --device cuda:$GPU_NO \
-    --batch_size 32 \
+    --batch_size 1 \
     --no_cache \
     --output_path $RESULT_DIR/$CURRENT_TRAINED_TOKENS/${num_fewshot}_shot.json
   done
 done
-
-#     --limit 100 \

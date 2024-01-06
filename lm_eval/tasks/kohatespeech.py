@@ -157,7 +157,7 @@ _CITATION2 = """
 class Apeach(Task):
     VERSION = 0
     DATASET_PATH = "jason9693/APEACH" 
-    DATASET_NAME = "apeach"
+    DATASET_NAME = "default"
     
     def has_training_docs(self):
         return False

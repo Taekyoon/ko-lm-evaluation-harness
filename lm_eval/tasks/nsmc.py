@@ -51,6 +51,8 @@ class NSMC(Task):
 
     def process_results(self, doc, results):
         ll_positive, ll_negative = results
+        
+        print(doc, results)
         pred = ll_positive > ll_negative
         gold = doc["label"]
         return {

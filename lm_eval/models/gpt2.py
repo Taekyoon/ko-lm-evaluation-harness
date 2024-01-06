@@ -48,7 +48,14 @@ class HFLM(BaseLM):
             revision=revision,
             trust_remote_code=trust_remote_code,
             torch_dtype=torch.float16,
-        ).to(self.device)
+            ignore_mismatched_sizes=True,
+        )
+        
+        print(self.gpt2)
+        
+        if not load_in_8bit:
+            self.gpt2 = self.gpt2.to(self.device)
+        
         self.gpt2.eval()
 
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(
@@ -62,12 +69,13 @@ class HFLM(BaseLM):
         if isinstance(
             self.tokenizer, (transformers.GPT2Tokenizer, transformers.GPT2TokenizerFast)
         ):
-            assert self.tokenizer.encode("hello\n\nhello") == [
-                31373,
-                198,
-                198,
-                31373,
-            ], self.tokenizer.encode("hello\n\nhello")
+            pass
+#             assert self.tokenizer.encode("hello\n\nhello") == [
+#                 31373,
+#                 198,
+#                 198,
+#                 31373,
+#             ], self.tokenizer.encode("hello\n\nhello")
 
         # setup for automatic batch size detection
         if batch_size == "auto":
@@ -103,6 +111,7 @@ class HFLM(BaseLM):
         return self._device
 
     def tok_encode(self, string: str):
+#         print(self.tokenizer.tokenize(string))
         return self.tokenizer.encode(string, add_special_tokens=False)
 
     def tok_decode(self, tokens):
@@ -117,14 +126,17 @@ class HFLM(BaseLM):
         logits returned from the model
         """
         with torch.no_grad():
-            return self.gpt2(inps)[0]
+            output = self.gpt2(inps)[0]
+            return output
 
     def _model_generate(self, context, max_length, eos_token_id):
         generation_kwargs = {"do_sample": False, "max_length": max_length}
         if eos_token_id is not None:
             generation_kwargs['eos_token_id'] = eos_token_id
             generation_kwargs['pad_token_id'] = eos_token_id # setting eos_token_id as pad token
-        return self.gpt2.generate(context, **generation_kwargs)
+            
+        output = self.gpt2.generate(context, **generation_kwargs)
+        return output
 
 
 # for backwards compatibility

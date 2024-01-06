@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/jupyternotebooks,python,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=jupyternotebooks,python,linux
 
+results
+
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/

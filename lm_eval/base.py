@@ -710,7 +710,6 @@ class MultipleChoiceTask(Task):
         lls = [
             rf.loglikelihood(ctx, " {}".format(choice))[0] for choice in doc["choices"]
         ]
-
         return lls
 
     def process_results(self, doc, results):

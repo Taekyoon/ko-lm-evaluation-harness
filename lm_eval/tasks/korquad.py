@@ -78,7 +78,7 @@ class Korquad(Task):
             language description, as well as the few shot examples, and the question
             part of the document for `doc`. 
         """
-        continuation = rf.greedy_until(ctx, {"until": ["\n", "\u200b", "##"]})
+        continuation = rf.greedy_until(ctx, {"until": ["\n", "\u200b", "##", "</s>"]})
         return continuation
     
     def process_results(self, doc, results):
@@ -97,6 +97,16 @@ class Korquad(Task):
 #             if a.strip() in results[0].strip():
 #                 continuation = [results[0][:len(a.strip())+1]]
         
+#         predictions = {
+#             'id': doc['id'],
+#             'prediction_text': [' '.join(list(c.replace(' ', ''))) for c in continuation]
+#         }
+        
+#         references = {
+#             'id': doc['id'],
+#             'answers': dict(text=[' '.join(list(t.replace(' ', ''))) for t in doc['answers']['text']], answer_start=doc['answers']['answer_start']),
+#         }
+        
         predictions = {
             'id': doc['id'],
             'prediction_text': continuation
@@ -104,7 +114,7 @@ class Korquad(Task):
         
         references = {
             'id': doc['id'],
-            'answers': doc['answers'],
+            'answers': doc['answers']
         }
         print('pred', predictions)
         print('ref', references)
